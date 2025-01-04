@@ -1,0 +1,17 @@
+{
+    "schema": [
+        "metadata"
+    ],
+    "createSchema": true,
+    "migrationsDir": "migrations",
+    "migrationsSchema": "public",
+    "createMigrationsSchema": true,
+    "migrationsTable": "pg_migrations",
+    "migrationFilenameFormat": "utc",
+    "migrationFileLanguage": "ts",
+    "checkOrder": true,
+    "verbose": true,
+    "decamelize": false,
+    "envPath": "./",
+    "tsconfig": "tsconfig.json"
+}
