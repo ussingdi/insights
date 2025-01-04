@@ -1,0 +1,36 @@
+steps:
+  - name: gcr.io/cloud-builders/git
+    args:
+      - '-c'
+      - >-
+        git clone --single-branch --branch staging
+        https://frostium-dev:$$TOKEN@github.com/frostium-dev/facility-insights.git
+        ./workspace
+    entrypoint: bash
+    secretEnv:
+      - TOKEN
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - ./workspace/fi-scripts/persistTokenTemporarily.sh
+    entrypoint: bash
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - ./workspace/fi-scripts/buildAndPushToArtifactRegistry.sh
+    entrypoint: bash
+    secretEnv:
+      - ARTIFACT_REGISTRY_TARGET
+      - GCS_BUCKET
+      - GCS_SA
+options:
+  logging: CLOUD_LOGGING_ONLY
+  dynamicSubstitutions: true
+availableSecrets:
+  secretManager:
+    - versionName: projects/387379635318/secrets/FI_GH_RO_TOKEN/versions/2
+      env: TOKEN
+    - versionName: projects/387379635318/secrets/FI_AR_LOCATION/versions/1
+      env: ARTIFACT_REGISTRY_TARGET
+    - versionName: projects/387379635318/secrets/FI_GCS_STAGING_BUCKET/versions/1
+      env: GCS_BUCKET
+    - versionName: projects/387379635318/secrets/FI_GCS_SERVICE_ACCOUNT/versions/1
+      env: GCS_SA
